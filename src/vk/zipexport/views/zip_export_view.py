@@ -7,25 +7,11 @@ import zipfile
 from pathlib import Path
 
 
-# class IZipExportView(Interface):
-#     """Marker Interface for IZipExportView"""
-
-
-# @implementer(IZipExportView)
-# class ZipExportView(BrowserView):
-#     def __call__(self):
-#         template = """<li class="heading" i18n:translate="">
-#           Sample View
-#         </li>"""
-#         return template
-
-
 class ZipExportView(BrowserView):
     def export_content_as_zip(self):
         # Erhalte das aktuelle Verzeichnis
         current_folder = self.context
         self.start_path = Path(current_folder.absolute_url_path()).parent
-        print(self.start_path)
 
         # Erstelle eine Zip-Datei und füge die Inhalte des Verzeichnisses hinzu
         zip_filename = f'{current_folder.id}.zip'
