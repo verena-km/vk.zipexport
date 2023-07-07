@@ -8,7 +8,7 @@
 
   <browser:page
     name="zipexport"
-    for="plone.app.contenttypes.interfaces.IFolder"
+    for="Products.CMFCore.interfaces.IFolderish"
     class=".zip_export_view.ZipExportView"
     permission="zope2.View"
     layer="vk.zipexport.interfaces.IVkZipexportLayer"
