@@ -10,14 +10,11 @@ class ItemExportAdapter(object):
 
     def __init__(self, context):
         self.context = context
-    
+
     def get_metadata_dict(self):
         attributes = vars(self.context)
 
-        for k, v, in attributes.items():
-            print (k,": ",v)
-
-        metadata_dict = {key: attributes[key] for key in [
+        metadata_dict = {key: attributes.get(key,None) for key in [
             "id", "title", "description",
             "creation_date", "modification_date", "effective_date", "expiration_date",
             "portal_type", "subject",
@@ -29,7 +26,7 @@ class ItemExportAdapter(object):
         metadata_dict['creator'] = self.context.Creator()
         metadata_dict['local_roles'] = self.context.get_local_roles()
         metadata_dict['owner_tuple'] = self.context.getOwnerTuple() # wozu?
-        # TODO Workflow (workflow id, review history) 
+        # TODO Workflow (workflow id, review history)
         # Placeful Workflow
 
         return metadata_dict
@@ -38,8 +35,6 @@ class ItemExportAdapter(object):
         filecontent = ""
         for k, v in dict.items():
             filecontent = filecontent + k + ": " + str(v) + "\n"
-            print (k,": ",v)
-
         return filecontent
 
     def get_content_for_zip(self):
@@ -54,7 +49,7 @@ class FileExportAdapter(ItemExportAdapter):
         list = super().get_content_for_zip()
         list.append(file_dict)
         return list
-    
+
 @implementer(IExportAdapter)
 @adapter(IImage)
 class ImageExportAdapter(ItemExportAdapter):
@@ -64,7 +59,7 @@ class ImageExportAdapter(ItemExportAdapter):
         list = super().get_content_for_zip()
         list.append(img_dict)
         return list
-    
+
 @implementer(IExportAdapter)
 @adapter(IDocument)
 class DocumentExportAdapter(ItemExportAdapter):
@@ -72,18 +67,18 @@ class DocumentExportAdapter(ItemExportAdapter):
     def get_metadata_dict(self):
         metadata_dict = super().get_metadata_dict()
         metadata_dict['table_of_contents'] = self.context.table_of_contents
-        metadata_dict['text'] = self.context.text.output
-        print( metadata_dict['text'])
-        metadata_dict['rawtext'] = self.context.text.raw
-        print( metadata_dict['rawtext'])
+        # text field can be empty (None)
+        if self.context.text:
+            metadata_dict['text'] = self.context.text.output
+            metadata_dict['rawtext'] = self.context.text.raw
         return metadata_dict
 
     def get_content_for_zip(self):
-        # wir speichern den Inhalt als HTML-File
-
-        doc_dict = {'filename': self.context.id +".html", 'content': self.context.text.output }
         list = super().get_content_for_zip()
-        list.append(doc_dict)
+        if self.context.text:
+            # wir speichern den Inhalt als HTML-File
+            doc_dict = {'filename': self.context.id +".html", 'content': self.context.text.output }
+            list.append(doc_dict)
         return list
 
 
@@ -94,7 +89,7 @@ class NewsItemExportAdapter(ItemExportAdapter):
         metadata_dict = super().get_metadata_dict()
         metadata_dict['text'] = self.context.text.output
         metadata_dict['rawtext'] = self.context.text.raw
-        metadata_dict['image_caption'] = self.context.image_caption        
+        metadata_dict['image_caption'] = self.context.image_caption
         return metadata_dict
 
     def get_content_for_zip(self):
@@ -120,16 +115,12 @@ class FolderExportAdapter(ItemExportAdapter):
         # TODO: Placeful-Workflow-Richtlinie
 
         return metadata_dict
-    
-
-
 
 
 @implementer(IExportAdapter)
 @adapter(ILink)
 class LinkExportAdapter(ItemExportAdapter):
     pass
-
 
 @implementer(IExportAdapter)
 @adapter(IEvent)
