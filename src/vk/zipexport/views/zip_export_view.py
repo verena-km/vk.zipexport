@@ -5,7 +5,6 @@ from zope.interface import implementer
 from zope.interface import Interface
 import zipfile
 from pathlib import Path
-import yaml
 from vk.zipexport.interfaces import IExportAdapter
 
 
@@ -36,24 +35,17 @@ class ZipExportView(BrowserView):
 
           # Füge die Inhalte des Ordners dem Zipfile hinzu
           for obj in folder.contentValues():
-              fun = (IExportAdapter(obj).get_fun())
-              #metadata = print(IExportAdapter(obj).get_metata())
 
-              # Schreib Metadaten in eine yaml-Datei, die nach der id benannt ist.
-              print(vars(obj))
-              #metadata = yaml.dump(vars(obj))
-              #zip_file.writestr(f'{relative_path}/{obj.id}.yml', metadata)
-              zip_file.writestr(f'{relative_path}/{obj.id}.meta', fun)
+              # Hole den zu zippenden Content für den Inhaltstyp (Liste aus Dicts mit filename / content)
+              content_for_zip = IExportAdapter(obj).get_content_for_zip()
+
+              # Schreibe den Content in die Zipdatei
+              for element in content_for_zip:
+                  zip_file.writestr(f'{relative_path}/{element["filename"]}', element["content"])
+
               if obj.isPrincipiaFolderish:
                   # Wenn es sich um ein Verzeichnis handelt, rufe die Funktion rekursiv auf
                   self._add_folder_to_zip(obj, zip_file)
-              else:
-                  # Wenn es sich um eine Datei handelt, füge sie dem Zipfile hinzu
-
-                  if obj.portal_type == "File":
-                    filename = obj.file.filename
-                    file_data = obj.file.data
-                    zip_file.writestr(f'{relative_path}/{filename}', file_data)
 
     def __call__(self):
       self.export_content_as_zip()
