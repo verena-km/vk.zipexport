@@ -15,11 +15,15 @@ Features
 This add-on adds an "Export as zip"-Action to folderish content types. Each object in the folder will be saved in the zip file.
 Metadata is saved in a text file for each content item (suffix .meta). File and Image objects are saved as files.
 
-Workflow states are currently not saved as metata.
+
 
 This add-on is meant for end users which want to archive their content, for example before deleting or restructuring content.
 It is not possible to import the exported content.
 
+Missing features
+
+- Workflow states are currently not saved as metata.
+- Links, Events and Collections are currently not exported
 
 Usage
 --------
