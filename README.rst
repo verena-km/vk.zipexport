@@ -2,66 +2,44 @@
    If you want to learn more about writing documentation, please check out: http://docs.plone.org/about/documentation_styleguide.html
    This text does not appear on PyPI or github. It is a comment.
 
-.. image:: https://github.com/collective/vk.zipexport/actions/workflows/plone-package.yml/badge.svg
-    :target: https://github.com/collective/vk.zipexport/actions/workflows/plone-package.yml
-
-.. image:: https://coveralls.io/repos/github/collective/vk.zipexport/badge.svg?branch=main
-    :target: https://coveralls.io/github/collective/vk.zipexport?branch=main
-    :alt: Coveralls
-
-.. image:: https://codecov.io/gh/collective/vk.zipexport/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/collective/vk.zipexport
-
-.. image:: https://img.shields.io/pypi/v/vk.zipexport.svg
-    :target: https://pypi.python.org/pypi/vk.zipexport/
-    :alt: Latest Version
-
-.. image:: https://img.shields.io/pypi/status/vk.zipexport.svg
-    :target: https://pypi.python.org/pypi/vk.zipexport
-    :alt: Egg Status
-
-.. image:: https://img.shields.io/pypi/pyversions/vk.zipexport.svg?style=plastic   :alt: Supported - Python Versions
-
-.. image:: https://img.shields.io/pypi/l/vk.zipexport.svg
-    :target: https://pypi.python.org/pypi/vk.zipexport/
-    :alt: License
-
 
 ============
 vk.zipexport
 ============
 
-An add-on for Plone
+A Plone add-on with which users can export content as a zip file
 
 Features
 --------
 
-- Can be bullet points
+This add-on adds an "Export as zip"-Action to folderish content types. Each object in the folder will be saved in the zip file.
+Metadata is saved in a text file for each content item (suffix .meta). File and Image objects are saved as files.
+
+Workflow states are currently not saved as metata.
+
+This add-on is meant for end users which want to archive their content, for example before deleting or restructuring content.
+It is not possible to import the exported content.
 
 
-Examples
+Usage
 --------
 
-This add-on can be seen in action at the following sites:
-- Is there a page on the internet where everybody can see the features?
-
-
-Documentation
--------------
-
-Full documentation for end users can be found in the "docs" folder, and is also available online at http://docs.plone.org/foo/bar
+Klick on  "Export as zip"-Action to generate and download a zip file
 
 
 Translations
 ------------
 
-This product has been translated into
-
-- Klingon (thanks, K'Plai)
+TODO
 
 
 Installation
 ------------
+
+
+TODO: put on PyPI or in collective
+
+(((
 
 Install vk.zipexport by adding it to your buildout::
 
@@ -75,6 +53,7 @@ Install vk.zipexport by adding it to your buildout::
 
 and then running ``bin/buildout``
 
+)))
 
 Authors
 -------
@@ -93,9 +72,8 @@ Put your name here, you deserve it!
 Contribute
 ----------
 
-- Issue Tracker: https://github.com/collective/vk.zipexport/issues
-- Source Code: https://github.com/collective/vk.zipexport
-- Documentation: https://docs.plone.org/foo/bar
+- Issue Tracker: https://github.com/verena-km/vk.zipexport/issues
+- Source Code: https://github.com/verena-km/vk.zipexport
 
 
 Support
