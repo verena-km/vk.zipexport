@@ -6,6 +6,7 @@ from zope.interface import Interface
 import zipfile
 from pathlib import Path
 from vk.zipexport.interfaces import IExportAdapter
+from io import BytesIO
 
 
 class ZipExportView(BrowserView):
@@ -17,15 +18,20 @@ class ZipExportView(BrowserView):
 
         # Erstelle eine Zip-Datei und füge die Inhalte des Verzeichnisses hinzu
         zip_filename = f'{current_folder.id}.zip'
-        with zipfile.ZipFile(zip_filename, 'w') as zip_file:
+        zip_buffer = BytesIO()
+
+#        with zipfile.ZipFile(zip_filename, 'w') as zip_file:
+        with zipfile.ZipFile(zip_buffer, 'w') as zip_file:
             self._add_folder_to_zip(current_folder, zip_file)
+
 
         # Sende die generierte Zip-Datei an den Benutzer
         self.request.response.setHeader('Content-Type', 'application/zip')
         self.request.response.setHeader('Content-Disposition', f'attachment; filename="{zip_filename}"')
-        with open(zip_filename, 'rb') as zip_file:
-          self.request.response.write(zip_file.read())
-
+#        with open(zip_filename, 'rb') as zip_file:
+#          self.request.response.write(zip_file.read())
+        zip_buffer.seek(0)
+        self.request.response.write(zip_buffer.read())
 
     def _add_folder_to_zip(self, folder, zip_file):
           # Füge den aktuellen Ordner dem Zipfile hinzu
