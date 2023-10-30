@@ -10,6 +10,7 @@
     name="zipexport"
     for="Products.CMFCore.interfaces.IFolderish"
     class=".zip_export_view.ZipExportView"
+    template="zip_export_view.pt"    
     permission="zope2.View"
     layer="vk.zipexport.interfaces.IVkZipexportLayer"
     />

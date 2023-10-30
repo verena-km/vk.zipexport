@@ -1,0 +1,44 @@
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  i18n:domain="vk.learnplone"
+  metal:use-macro="context/main_template/macros/master"
+>
+  <body>
+    <metal:block fill-slot="main">
+      <h1>Inhalte dieses Ordners in einer Zip-Datei herunterladen</h1>
+
+      <p> Die Inhalte dieses Ordners (und die aller Unterordner) werden in eine 
+        zip-Datei gepackt und heruntergeladen. Sie können nachfolgend auswählen, ob nur 
+        Dateien und Bilder oder sämtliche Inhalte inklusive deren Metadaten
+        (wie Beschreibung, Ersteller, Änderungszeitpunkt) heruntergeladen werden sollen.
+
+        Seiten und Nachrichten werden als html-Datei in die zip-Datei aufgenommen
+
+        Für jeden Inhalt wird dazu noch eine Datei mit den Metadaten des Inhalts angelegt.
+       
+      </p>
+      <!-- Form Part -->
+      <div tal:condition="not: view/submitted">
+        <form method="post" tal:attributes="action request/URL">
+
+          <h2>Was soll exportiert werden?</h2>
+          <input type="radio" id="modus1" name="modus" value="content">
+          <label for="file"> Nur Dateien </label><br>
+          <input type="radio" id="modus2" name="modus" value="content_metadata">
+          <label for="document"> Alle Inhalte mit Metadaten </label><br>
+
+          <br>
+          <input name="Submit" type="submit" value="Submit" />
+        </form>
+      </div>
+
+      <!-- Result Part -->
+      <div tal:condition="view/submitted">
+        <div tal:content="view/response_text">Name</div>
+      </div>
+    </metal:block>
+  </body>
+</html>
