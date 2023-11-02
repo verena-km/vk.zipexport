@@ -27,7 +27,7 @@
           <h2>Was soll exportiert werden?</h2>
           <input type="radio" id="modus1" name="modus" value="content">
           <label for="file"> Nur Dateien </label><br>
-          <input type="radio" id="modus2" name="modus" value="content_metadata">
+          <input type="radio" id="modus2" name="modus" value="content_metadata"  checked="checked">
           <label for="document"> Alle Inhalte mit Metadaten </label><br>
 
           <br>

@@ -61,7 +61,9 @@ class ItemExportAdapter(object):
             files.append(
                 {
                 "content": self.get_metadata_string(self.get_metadata_dict()),
-                "filename": f"{self.context.id}.meta",
+                "filename": f"{self.context.id}_meta.txt",
+                "timestamp": self.context.modification_date 
+
                 }
             )
         return files
@@ -79,9 +81,11 @@ class FileExportAdapter(ItemExportAdapter):
         return metadata_dict
 
     def get_files_for_zip(self):
+
         return [{
             "filename": self.context.file.filename,
             "content": self.context.file.data,
+            "timestamp": self.context.modification_date          
         }]
 
 @implementer(IExportAdapter)
@@ -96,6 +100,7 @@ class ImageExportAdapter(ItemExportAdapter):
         return [{
             "filename": self.context.image.filename,
             "content": self.context.image.data,
+            "timestamp": self.context.modification_date                 
         }]
 
 
@@ -112,9 +117,21 @@ class DocumentExportAdapter(ItemExportAdapter):
         return metadata_dict
 
     def get_files_for_zip(self):
+        # We create a html string containing heading, description and content
+        heading = self.context.title
+        description = self.context.description
+        # text field can be empty (None)
+        if self.context.text:
+            content = self.context.text.output
+        else:
+            content =""
+
+        html_content = create_html(heading, description, content)
+
         return  [{
                 "filename": self.context.id + ".html",
-                "content": self.context.text.output,
+                "content": html_content,
+                "timestamp": self.context.modification_date                     
             }]
 
 
@@ -123,23 +140,42 @@ class DocumentExportAdapter(ItemExportAdapter):
 class NewsItemExportAdapter(ItemExportAdapter):
     def get_metadata_dict(self):
         metadata_dict = super().get_metadata_dict()
-        metadata_dict["text"] = self.context.text.output
-        metadata_dict["rawtext"] = self.context.text.raw
+        # text field can be empty (None)
+        if self.context.text:        
+            metadata_dict["text"] = self.context.text.output
+            metadata_dict["rawtext"] = self.context.text.raw
         metadata_dict["image_caption"] = self.context.image_caption
         return metadata_dict
 
 
     def get_files_for_zip(self):
-        # wir speichern den Inhalt als HTML-File
+
+        # We create a html string containing heading, description and content
+        heading = self.context.title
+        description = self.context.description
+        # text field can be empty (None)
+        if self.context.text:
+            content = self.context.text.output
+        else:
+            content =""
+
+        html_content = create_html(heading, description, content)
+
         news_html_dict = {
             "filename": self.context.id + ".html",
-            "content": self.context.text.output,
+            "content": html_content,
+            "timestamp": self.context.modification_date                 
         }
-        news_image_dict = {
-            "filename": self.context.image.filename,
-            "content": self.context.image.data,
-        }
-        return [news_html_dict, news_image_dict]
+        if self.context.image:
+            news_image_dict = {
+                "filename": self.context.image.filename,
+                "content": self.context.image.data,
+                "timestamp": self.context.modification_date                     
+            }
+            return [news_html_dict, news_image_dict]
+        
+        else:
+            return[news_html_dict]
 
 
 @implementer(IExportAdapter)
@@ -172,3 +208,20 @@ class EventExportAdapter(ItemExportAdapter):
 @adapter(ICollection)
 class CollectionExportAdapter(ItemExportAdapter):
     pass
+
+
+def create_html(heading, description, content):
+    html = f"""
+<!DOCTYPE html>    
+<html>
+  <head>
+    <title>{heading}</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  </head>
+  <body>
+    <h1>{heading}</h1>
+    <p>{description}</p>
+    {content}
+  </body>
+</html>"""
+    return html

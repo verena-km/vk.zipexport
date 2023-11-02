@@ -56,9 +56,17 @@ class ZipExportView(BrowserView):
 
             # Schreibe den Content in die Zipdatei
             for element in content_for_zip:
-                zip_file.writestr(
-                    f'{relative_path}/{element["filename"]}', element["content"]
-                )
+                # date_time is six field tuple (1980, 1, 1, 0, 0, 0) of int
+                date_time = tuple(map(int,element['timestamp'].parts()[:6]))
+
+                info = zipfile.ZipInfo(filename=f'{relative_path}/{element["filename"]}', date_time = date_time)
+                #print(info)
+
+                # zip_file.writestr(
+                #     f'{relative_path}/{element["filename"]}', element["content"]
+                # )
+
+                zip_file.writestr(info, element["content"])
 
             if obj.isPrincipiaFolderish:
                 # Wenn es sich um ein Verzeichnis handelt, rufe die Funktion rekursiv auf
