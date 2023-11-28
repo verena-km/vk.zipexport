@@ -10,6 +10,7 @@ from vk.zipexport.interfaces import IExportAdapter
 from zope.component import adapter
 from zope.interface import implementer
 from zope.interface import Interface
+import imghdr
 
 
 @implementer(IExportAdapter)
@@ -77,7 +78,11 @@ class ItemExportAdapter(object):
 class FileExportAdapter(ItemExportAdapter):
     def get_metadata_dict(self):
         metadata_dict = super().get_metadata_dict()
+        # wir verwenden den filename als Dateiname
+        # Achtung: es ist möglich, dass mehrere Dateien den gleichen Dateiname haben
+        # Es werden beide ins zipfile aufgenommen.
         metadata_dict["filename"] = self.context.file.filename
+        metadata_dict["filesize"] = self.context.file.size
         return metadata_dict
 
     def get_files_for_zip(self):
@@ -93,10 +98,15 @@ class FileExportAdapter(ItemExportAdapter):
 class ImageExportAdapter(ItemExportAdapter):
     def get_metadata_dict(self):
         metadata_dict = super().get_metadata_dict()
+        # wir verwenden den filename als Dateiname
+        # Achtung: es ist möglich, dass mehrere Dateien den gleichen Dateiname haben
+        # Es werden beide ins zipfile aufgenommen.
         metadata_dict["filename"] = self.context.image.filename
+        metadata_dict["filesize"] = self.context.image.size        
         return metadata_dict
 
     def get_files_for_zip(self):
+
         return [{
             "filename": self.context.image.filename,
             "content": self.context.image.data,
@@ -167,8 +177,22 @@ class NewsItemExportAdapter(ItemExportAdapter):
             "timestamp": self.context.modification_date                 
         }
         if self.context.image:
+            # damit man sieht, zu welchem News Item das Bild gehört, stellen wird dessen id voran.
+            if self.context.image.filename:
+                filename = self.context.id+"_"+self.context.image.filename
+            # in old News Items filename is "None" - we create one from id
+            else:            
+                img_type = img_type = imghdr.what('',self.context.image.data) # get file type
+                if img_type == 'jpeg':
+                    suffix = 'jpg'
+                else:
+                    suffix = img_type
+
+                filename = self.context.id + "_img."+suffix
+            #print(filename)
+
             news_image_dict = {
-                "filename": self.context.image.filename,
+                "filename": filename,
                 "content": self.context.image.data,
                 "timestamp": self.context.modification_date                     
             }

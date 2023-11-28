@@ -51,6 +51,7 @@ class ZipExportView(BrowserView):
         # Füge die Inhalte des Ordners dem Zipfile hinzu
         for obj in folder.contentValues():
 
+            #print(obj.id)
             # Hole den zu zippenden Content für den Inhaltstyp (Liste aus Dicts mit filename / content)
             content_for_zip = IExportAdapter(obj).get_content_for_zip(meta)
 
@@ -58,14 +59,12 @@ class ZipExportView(BrowserView):
             for element in content_for_zip:
                 # date_time is six field tuple (1980, 1, 1, 0, 0, 0) of int
                 date_time = tuple(map(int,element['timestamp'].parts()[:6]))
+                filename = f'{relative_path}/{element["filename"]}'
 
-                info = zipfile.ZipInfo(filename=f'{relative_path}/{element["filename"]}', date_time = date_time)
-                #print(info)
+#                if filename in (zip_file.namelist()):
+#                    print("file is already in zip")
 
-                # zip_file.writestr(
-                #     f'{relative_path}/{element["filename"]}', element["content"]
-                # )
-
+                info = zipfile.ZipInfo(filename=filename, date_time = date_time)
                 zip_file.writestr(info, element["content"])
 
             if obj.isPrincipiaFolderish:

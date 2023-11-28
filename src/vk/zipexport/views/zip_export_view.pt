@@ -11,13 +11,20 @@
       <h1>Inhalte dieses Ordners in einer Zip-Datei herunterladen</h1>
 
       <p> Die Inhalte dieses Ordners (und die aller Unterordner) werden in eine 
-        zip-Datei gepackt und heruntergeladen. Sie können nachfolgend auswählen, ob nur 
-        Dateien und Bilder oder sämtliche Inhalte inklusive deren Metadaten
-        (wie Beschreibung, Ersteller, Änderungszeitpunkt) heruntergeladen werden sollen.
+        zip-Datei gepackt und heruntergeladen. Die Funktion kann zur Datensicherung und Archivierung von Inhalten genutzt werden. Die zip-Datei kann nicht für einen automatisierten 
+        (Re-)Import genutzt werden.
+        </p>
+        <p>
+        Dateien und Bilder werden beim Export unter ihrem ursprünglichen Dateinamen gespeichert.
+        Seiten und Nachrichten werden als html-Datei in die zip-Datei aufgenommen.
+        Enthalten Nachrichten ein Teaserbild, wird dieses ebenfalls exportiert.
+        </p>
+        <p>
+        Sie können nachfolgend auswählen, ob nur die Dateien selbst oder auch die Metadaten (wie z.B. Titel, Beschreibung, Ersteller, Änderungszeitpunkt) 
+        in die zip-Datei aufgenommen werden sollen. Wählt man auch die Metadaten aus wird für jeden Inhalt zusätzlich eine Textdatei angelegt, die die
+        Metadaten enthält.
 
-        Seiten und Nachrichten werden als html-Datei in die zip-Datei aufgenommen
 
-        Für jeden Inhalt wird dazu noch eine Datei mit den Metadaten des Inhalts angelegt.
        
       </p>
       <!-- Form Part -->
