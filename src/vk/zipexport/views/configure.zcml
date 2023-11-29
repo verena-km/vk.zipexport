@@ -15,13 +15,6 @@
     layer="vk.zipexport.interfaces.IVkZipexportLayer"
     />
 
-  <browser:page
-    name="my-view"
-    for="plone.app.contenttypes.interfaces.IFolder"
-    class=".my_view.MyView"
-    template="my_view.pt"
-    permission="zope2.View"
-    layer="vk.zipexport.interfaces.IVkZipexportLayer"
-    />
+
 
 </configure>
