@@ -11,6 +11,13 @@ from zope.component import adapter
 from zope.interface import implementer
 from zope.interface import Interface
 import imghdr
+wiki = True
+try:
+    from rh.wiki.interfaces import IWikiPage
+except ImportError:
+    print("Wiki Modul not installed")
+    wiki = False
+
 
 
 @implementer(IExportAdapter)
@@ -219,8 +226,11 @@ class FolderExportAdapter(ItemExportAdapter):
 @implementer(IExportAdapter)
 @adapter(ILink)
 class LinkExportAdapter(ItemExportAdapter):
-    pass
+    def get_metadata_dict(self):
+        metadata_dict = super().get_metadata_dict()
+        metadata_dict["remoteUrl"] = self.context.remoteUrl
 
+        return metadata_dict
 
 @implementer(IExportAdapter)
 @adapter(IEvent)
@@ -232,6 +242,39 @@ class EventExportAdapter(ItemExportAdapter):
 @adapter(ICollection)
 class CollectionExportAdapter(ItemExportAdapter):
     pass
+
+## Löschen, wenn wiki nicht mehr genutzt wird
+if wiki:
+    @implementer(IExportAdapter)
+    @adapter(IWikiPage)
+    class WikiExportAdapter(ItemExportAdapter):
+        def get_metadata_dict(self):
+            metadata_dict = super().get_metadata_dict()
+            # text field can be empty (None)
+            if self.context.text:
+                metadata_dict["text"] = self.context.text.output
+                metadata_dict["rawtext"] = self.context.text.raw
+            return metadata_dict
+
+        def get_files_for_zip(self):
+            # We create a html string containing heading, description and content
+            heading = self.context.title
+            description = self.context.description
+            # text field can be empty (None)
+            if self.context.text:
+                content = self.context.text.output
+            else:
+                content =""
+
+            html_content = create_html(heading, description, content)
+
+            return  [{
+                    "filename": self.context.id + ".html",
+                    "content": html_content,
+                    "timestamp": self.context.modification_date                     
+                }]
+
+
 
 
 def create_html(heading, description, content):
